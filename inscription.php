@@ -1,11 +1,18 @@
 <?php
 session_start();
 
-require('src/connextionBDD.php');
+require('src/log.php');
+
+if(isset($_SESSION['connect'])) {
+	header('location: ../index.php');
+}
+
 
 if (isset($_POST['email']) && !empty($_POST['email']) 
-	&& isset($_POST['password']) && !empty($_POST['password']) 
-	&& isset($_POST['password_two']) && !empty($_POST['password_two'])) {
+&& isset($_POST['password']) && !empty($_POST['password']) 
+&& isset($_POST['password_two']) && !empty($_POST['password_two'])) {
+	
+	require('src/connextionBDD.php');
 
 	$email			= htmlspecialchars($_POST['email']);
 	$password		= htmlspecialchars($_POST['password']);
@@ -35,8 +42,8 @@ if (isset($_POST['email']) && !empty($_POST['email'])
 	}
 
 	// cryptage du password et du secret
-	$secret = sha1($password) . time();
-	$password = sha1($password) . '4328';
+	$secret = sha1($email) . time();
+	$password = sha1($password . '4328') . "25";
 
 	//Créer un utilisateur
 	$req = $bdd->prepare('INSERT INTO user(email, password,secret) VALUES (?, ?, ?)');
